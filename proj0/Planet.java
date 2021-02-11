@@ -1,4 +1,4 @@
-class Planet {
+public class Planet {
     public double xxPos;   //current x position
     public double yyPos;   //current y position
     public double xxVel;   //current velocity in x direction
@@ -50,7 +50,6 @@ class Planet {
     */
     public double calcForceExertedByX (Planet b) {
         double deltaX = b.xxPos - xxPos;
-        System.out.println(deltaX);
         return calcForceExertedBy(b) * deltaX / calcDistance(b);
     }
 
@@ -111,7 +110,6 @@ class Planet {
     * Takes no parameters, and return nothing */
     public void draw () {
         String imagetoDraw = "images/" + imgFileName;
-        System.out.println(imagetoDraw);
         StdDraw.picture(xxPos, yyPos, imagetoDraw);
     }
 }   
