@@ -14,13 +14,13 @@ public class NBody {
     /* Given a file name as a String. 
     * @return: an array of Bodys, which starts from 3rd line in the file
     */
-    public static Planet[] readBodies(String filename) {
+    public static Body[] readBodies(String filename) {
         In in = new In(filename);
         int NumberofPlanets = in.readInt();
         double radius = in.readDouble();
-        Planet[] planets = new Planet[NumberofPlanets];
+        Body[] planets = new Body[NumberofPlanets];
         for (int i = 0; i < NumberofPlanets; i++) {
-            planets[i] = new Planet(in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readString());
+            planets[i] = new Body(in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readDouble(), in.readString());
         }
         in.close();
         return planets;
@@ -69,7 +69,7 @@ public class NBody {
 
 
 
-        for (Planet mybody: bodiesArray) {
+        for (Body mybody: bodiesArray) {
             mybody.draw();
         }
         /* Shows the drawing to the screen, and waits 2000 milliseconds. */
@@ -83,18 +83,18 @@ public class NBody {
             double[] xForces = new double [bodiesArray.length];
             double[] yForces = new double [bodiesArray.length];
             int i = 0;
-            for (Planet mybody: bodiesArray) {
+            for (Body mybody: bodiesArray) {
                 xForces[i] = mybody.calcNetForceExertedByX(bodiesArray);
                 yForces[i] = mybody.calcNetForceExertedByY(bodiesArray);
                 i++;
             }
             i = 0;
-            for (Planet mybody: bodiesArray) {
+            for (Body mybody: bodiesArray) {
                 mybody.update(dt, xForces[i], yForces[i]);
                 i++;
             }
             StdDraw.picture(0, 0, imageToDraw);
-            for (Planet mybody: bodiesArray) {
+            for (Body mybody: bodiesArray) {
                 mybody.draw();
             }
             StdDraw.show();
