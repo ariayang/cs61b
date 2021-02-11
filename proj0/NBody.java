@@ -14,7 +14,7 @@ public class NBody {
     /* Given a file name as a String. 
     * @return: an array of Bodys, which starts from 3rd line in the file
     */
-    public static Planet[] readBodies(String filename) {
+    public static Planet[] readPlanets(String filename) {
         In in = new In(filename);
         int NumberofPlanets = in.readInt();
         double radius = in.readDouble();
@@ -42,7 +42,7 @@ public class NBody {
         String filename = args[2];
 
         //Read in the bodies and the universe radius
-        Body[] bodiesArray = readBodies(filename);
+        Planet[] bodiesArray = readPlanets(filename);
         double radius = readRadius(filename);
        
 
