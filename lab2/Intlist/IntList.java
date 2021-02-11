@@ -39,7 +39,7 @@ public class IntList {
 
         while (L != null) {
             L.first = L.first * L.first;
-            L = L.rest;
+            L = L.rest;  //loop through IntList L
         }
     }
 
@@ -81,7 +81,13 @@ public class IntList {
 
     public static IntList dcatenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+        if (A == null) {return B; }
+        if (B == null) {return A; }
+        if (A== null && B== null) {return null;}
+        IntList cursor = A.rest;
+        while (cursor.rest!=null) { cursor = cursor.rest; }
+        cursor.rest = B;
+        return A;
     }
 
     /**
@@ -90,7 +96,27 @@ public class IntList {
      */
     public static IntList catenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+
+        if (A == null) {return B; }
+        if (B == null) {return A; }
+        if (A== null && B== null) {return null;}
+
+        IntList a = new IntList(A.first, null); //Create a new IntList for return
+        IntList cursor = a;
+        A = A.rest;
+        while (A!=null) {
+                cursor.rest = new IntList(A.first, null);
+                A = A.rest;
+                cursor = cursor.rest;
+            }
+        //cursor.rest = new IntList(B.first, null);
+        //B = B.rest;
+        while (B!=null) {
+            cursor.rest = new IntList(B.first, null);
+            B = B.rest;
+            cursor = cursor.rest;
+        }
+        return a;
     }
 
 
