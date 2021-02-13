@@ -143,7 +143,7 @@ public class ArrayDequeTest {
 
 		lld1.addFirst(8);
 		System.out.println("Printing out last item, should be 9: ");
-		System.out.println(lld1.getLast());
+		//System.out.println(lld1.getLast());
 		//Above passed on 5:06pm
 
 		/*System.out.println("Testing recursive, get index 0, should be 8");
