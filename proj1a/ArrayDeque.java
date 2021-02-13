@@ -20,28 +20,26 @@ public class ArrayDeque<T> {
     //Constant time unless resize
     /** Add item (type T) to the first of the array. */
     public void addFirst(T item) {
-        if (isEmpty()) {
+        if (isEmpty()) { //Empty array
             items[0] = item;
             sentinel = 0;
-        }  //Empty array
-        else {
-            if (size >= items.length - 1) {
-                resize(size*RFACTOR);
+        } else {
+            if (size == items.length) {
+                resize(size * RFACTOR);
             } //Resize if array is full
             items[loopindex(sentinel - 1)] = item;
             sentinel = loopindex(sentinel - 1);
-            }
+        }
         size++;
     }
 
-    /** Add item (type T) to the last of the array. */
+    /** Add item (type T) to the last. */
     public void addLast(T item) {
         if (isEmpty()) {  //Empty array
             items[0] = item;
             sentinel = 0;
-        }
-        else {
-            if (size >= items.length - 1) {
+        } else {
+            if (size == items.length ) {
                 resize(size * RFACTOR);
             }  //Resize if array is full
             items[loopindex(sentinel + size)] = item;
@@ -51,28 +49,27 @@ public class ArrayDeque<T> {
 
     /** Add item (type T) to the first of the array.
      * @return the item, or null if not available. */
-    public T removeFirst(){
+    public T removeFirst() {
         if (isEmpty()) { //Empty array
             return null;
-        }
-        else {
+        } else {
             T poppedItem = items[sentinel];
             items[sentinel] = AVAILABLE;
             if (size > 1) {
                 sentinel = loopindex(sentinel + 1);
-            }
-            else {  //Empty list after
+            } else {  //Empty list after
                 sentinel = 0; }
                 size--;
             return poppedItem;
-            }
         }
+    }
 
     //TODO: need to fix resize after multiple removals
     //Ensure resizing doesn't cause nulls. (0.0/1.176)
     public T removeLast() {
-        if (isEmpty()) { return null; }  //Empty array
-        else {
+        if (isEmpty()) {
+            return null; //Empty array
+        } else {
             T poppedItem = items[loopindex(sentinel + size - 1)]; //last item
             items[loopindex(sentinel + size - 1)] = AVAILABLE;
             if (size == 1) {
@@ -84,38 +81,40 @@ public class ArrayDeque<T> {
     }
 
     //Constant time
-    /** Return the item at location index. Return null if index is not valid. */
+    /** Return the item at location index.
+     * Return null if index is not valid. */
     public T get(int index) {
         if (!inrange((index))) {
             System.out.println("Index Out of bound.");
             return null;
-        }
-        else {
+        } else {
             return items[loopindex(sentinel + index)];
         }
     }
 
 
     private T getLast() {
-        if (size == 0) { return null;}
-        else return items[loopindex(sentinel + size - 1)];
+        if (size == 0) { return null;
+        } else {
+            return items[loopindex(sentinel + size - 1)];
+        }
     }
 
     /** return the number of the items in the array*/
-    public int size() { return size; }
+    public int size() {
+        return size;
+    }
 
     /** Check if the array is empty. Return true if it is Empty. */
     public boolean isEmpty() {
-        if (size == 0) { return true; }
-        else { return false; }
+        return (size == 0);
     }
 
     /** Prints the items in the deque from first to last, separated by a space. */
     public void printDeque() {
         if (isEmpty()) {
             System.out.println("Empty list.");
-        }
-        else {
+        } else {
             //int printSeq = sentinel;
             for (int i = sentinel; i < size + sentinel; i++) {
                 System.out.print (items[loopindex(i)] + " ");
@@ -127,8 +126,10 @@ public class ArrayDeque<T> {
     /** Resize the matrix , takes the new matrix size, return the new matrix */
     private void resize(int newSize)  {
         T[] a = (T []) new Object[newSize];
-        System.arraycopy(items, 0, a, 0, size);  //when array is full
+        System.arraycopy(items, sentinel, a, 0, size-sentinel);  //when array is full
+        System.arraycopy(items, 0, a, size-sentinel, sentinel);
         items = a;
+        sentinel = 0;
     }
 
 
@@ -148,8 +149,7 @@ public class ArrayDeque<T> {
 
     /** Helper: check if an input number is a valid index number */
     private boolean inrange(int number) {
-        if (number >= 0 && number < items.length) {
-            return true; }
-        else {return false;}
+        return (number >= 0 && number < items.length);
     }
 }
+

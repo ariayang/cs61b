@@ -1,4 +1,4 @@
-public class LinkedListDeque <T> {
+public class LinkedListDeque<T> {
     /* Deque (usually pronounced like “deck”) is an irregular acronym of
      * double-ended queue. Double-ended queues are sequence containers with
      * dynamic sizes that can be expanded or contracted on both ends
@@ -11,7 +11,7 @@ public class LinkedListDeque <T> {
         sentinel = new LLNode();
     }
 
-    private class LLNode <T> {
+    private class LLNode<T> {
         private LLNode prev;
         private T item;
         private LLNode next;
@@ -30,18 +30,18 @@ public class LinkedListDeque <T> {
     }
 
 
-    /* circular sentinel: next point to the first node. first and last points to each other */
+    /* circular sentinel: next point to the first node.
+    first and last points to each other */
 
     /* Adds an item of type T to the front of the deque. */
-    public void addFirst (T item) {
+    public void addFirst(T item) {
         LLNode newNode = new LLNode();
         newNode.item = item;
         if (isEmpty()) {
             sentinel.next = newNode;
             newNode.prev = newNode;
             newNode.next = newNode;
-        }
-        else {
+        } else {
             newNode.next = sentinel.next;
             newNode.prev = sentinel.next.prev;
             sentinel.next.prev = newNode;
@@ -51,15 +51,14 @@ public class LinkedListDeque <T> {
     }
 
     /* Adds an item of type T to the back of the deque. */
-    public void addLast (T item ) {
+    public void addLast(T item) {
         LLNode newNode = new LLNode();
         newNode.item = item;
         if (isEmpty()) {
             sentinel.next = newNode;
             newNode.prev = newNode;
             newNode.next = newNode;
-        }
-        else {
+        } else {
             newNode.prev = sentinel.next.prev;
             newNode.next = sentinel.next;
             sentinel.next.prev.next = newNode;
@@ -77,11 +76,12 @@ public class LinkedListDeque <T> {
     public int size() {
         return size; }
 
-    /* Prints the items in the deque from first to last, separated by a space. */
+    /* Prints the items in the deque from first to last,
+    separated by a space. */
     public void printDeque() {
         LLNode cursor = sentinel.next;
-        if (isEmpty()) {System.out.println("Empty list.");}
-        else {
+        if (isEmpty()) {System.out.println("Empty list.");
+        } else {
             for (int i = 0; i < size; i++) {
                 System.out.print (cursor.item + " ");
                 cursor = cursor.next;
@@ -97,11 +97,10 @@ public class LinkedListDeque <T> {
         LLNode cursor = new LLNode();
         cursor = sentinel.next;
         if (isEmpty()) {
-            return null; }
-        else if (sentinel.next == cursor.next) {
+            return null;
+        } else if (sentinel.next == cursor.next) {
             sentinel.next = null;
-        }
-        else {
+        } else {
             sentinel.next = cursor.next;
             cursor.next.prev = cursor.prev;
             cursor.prev.next = cursor.next;
@@ -114,16 +113,17 @@ public class LinkedListDeque <T> {
         LLNode cursor = new LLNode();
         cursor = sentinel.next;  //cursor points to the first node
         if (isEmpty()) {
-            return null; }
-        else if (sentinel.next == cursor.next) {  //Case of Only one node
+            return null;
+        } else if (sentinel.next == cursor.next) {  //Case of Only one node
             sentinel.next = null;
-        }
-        else {
+        } else {
             cursor = cursor.prev;  //cursor points to the last node
             sentinel.next.prev = cursor.prev;
             cursor.prev.next = sentinel.next;
-            //Lesson learned: assigned cursor (dynamic, local) to this node,
-            // So I lost this cur.prev.next pointer with this statement.
+            //Lesson learned: assigned cursor (dynamic,
+            // local) to this node,
+            // So I lost this cur.prev.next pointer
+            // with this statement.
         }
         size--;
         return (T) cursor.item;
@@ -133,23 +133,21 @@ public class LinkedListDeque <T> {
     /* Gets the item at the given index, where 0 is the front,
     1 is the next item, and so forth. If no such item exists,
     returns null. Must not alter the deque! */
-    //TODO: did not pass the test. Need fix.
     public T get(int index) {
         LLNode cursor = sentinel.next;
         if (isEmpty()) {
-            return null; }
-        else if (sentinel.next == cursor.next) {
+            return null;
+        } else if (sentinel.next == cursor.next) {
             if (index == 0) {
-                return (T) cursor.item; }
-            else {
+                return (T) cursor.item;
+            } else {
                 return null; }
-        }
-        else {
+        } else {
             int i = 0;
             while (sentinel.next != cursor.next)  {
                 if (i == index) {
-                    return (T) cursor.item; }
-                else { cursor = cursor.next; i++;}
+                    return (T) cursor.item;
+                } else { cursor = cursor.next; i++;}
             }
             return null;
         }
@@ -160,20 +158,23 @@ public class LinkedListDeque <T> {
 
         LLNode cursor = sentinel.next;  //first node
         if (isEmpty()) {
-            return null; }
+            return null;
+        }
         LLNode foundNode = findNodeRecursive(index, cursor);
         if (foundNode == null) {
-            return null; }
-        else {
-            return (T)foundNode.item; }
+            return null;
+        } else {
+            return (T) foundNode.item; }
     }
 
     private LLNode findNodeRecursive(int index, LLNode n) {
         if (index == 0) {
-            return n; }
-        else if (index <0) {
-            return null; }
-        else {return findNodeRecursive(index - 1, n.next);}
+            return n;
+        } else if (index <0) {
+            return null;
+        } else {
+            return findNodeRecursive(index - 1, n.next);
+        }
     }
-
 }
+
