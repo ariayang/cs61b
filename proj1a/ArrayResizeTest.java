@@ -40,8 +40,8 @@ public class ArrayResizeTest {
 		// should be empty 
 		boolean passed = checkEmpty(true, lld1.isEmpty());
 
-		lld1.addFirst(10);
 		lld1.addFirst(11);
+		lld1.addFirst(10);
 		lld1.addFirst(9);
 		lld1.addLast(12);
 		lld1.addFirst(8);
@@ -60,9 +60,8 @@ public class ArrayResizeTest {
 		lld1.printDeque();
 		System.out.println("Printing the size of items");
 		System.out.println(lld1.size());
-		System.out.println("Printing the length of the array");
 
-		System.out.println("Testing size down now");
+
 		lld1.addFirst(5);
 		lld1.addFirst(4);
 		lld1.addFirst(3);
@@ -74,13 +73,21 @@ public class ArrayResizeTest {
 		lld1.addLast(17);
 		lld1.addLast(18);
 		lld1.addLast(19);
-		for (int i = 0; i <= 17; i ++) {
+		lld1.printDeque();
+
+		System.out.println("Testing size down now");
+		for (int i = 0; i <= 9; i ++) {
 			lld1.removeFirst();
+			lld1.printDeque();
+		}
+		for (int i = 0; i <= 8; i ++) {
+			lld1.removeLast();
+			lld1.printDeque();
 		}
 
 		System.out.println("Printing the size of items");
 		System.out.println(lld1.size());
-		System.out.println("Printing deque after reudcing queue size from 20 to 3");
+		System.out.println("Printing deque after reudcing queue size from 20 to 9");
 		lld1.printDeque();
 
 

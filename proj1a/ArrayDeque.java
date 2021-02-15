@@ -60,11 +60,13 @@ public class ArrayDeque<T> {
             } else {  //Empty list after
                 sentinel = 0;}
             size--;
+            if (ifsizeDown()) {
+                sizeDown();
+            }
             return poppedItem;
         }
     }
 
-    //TODO: need to fix resize after multiple removals
     //Ensure resizing doesn't cause nulls. (0.0/1.176)
     public T removeLast() {
         if (isEmpty()) {
@@ -119,7 +121,6 @@ public class ArrayDeque<T> {
         if (isEmpty()) {
             System.out.println("Empty list.");
         } else {
-            //int printSeq = sentinel;
             for (int i = sentinel; i < size + sentinel; i++) {
                 System.out.print(items[loopindex(i)] + " ");
             }
@@ -161,17 +162,20 @@ public class ArrayDeque<T> {
     private void sizeDown() {
         int arrayL = items.length;
         T[] a = (T []) new Object[arrayL/2];
-        if ((size + sentinel) < items.length) {
+        if ((size + sentinel) >= arrayL) { //2 copies
+            System.arraycopy(items, sentinel, a, 0, arrayL - sentinel);
             System.arraycopy(items, 0, a, arrayL - sentinel, size - arrayL + sentinel);
+        } else {  //1 copies
+            System.arraycopy(items, sentinel, a, 0, size);
         }
-        System.arraycopy(items, sentinel, a, 0, arrayL - sentinel);
         items = a;
         sentinel = 0;
     }
 
     /** Helper: decide if size down needed < 25% */
     private boolean ifsizeDown() {
-        if ((size / items.length) < 0.25 && items.length > 16) {
+        double ratio = (double) size / items.length;
+        if (ratio > 0.25 || items.length <= 16) {
             return false;
         } else {
             return true;
