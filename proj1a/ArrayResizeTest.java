@@ -61,7 +61,31 @@ public class ArrayResizeTest {
 		System.out.println("Printing the size of items");
 		System.out.println(lld1.size());
 		System.out.println("Printing the length of the array");
-		//System.out.println(lld1.length);
+
+		System.out.println("Testing size down now");
+		lld1.addFirst(5);
+		lld1.addFirst(4);
+		lld1.addFirst(3);
+		lld1.addFirst(2);
+		lld1.addFirst(1);
+		lld1.addFirst(0);
+		lld1.addLast(15);
+		lld1.addLast(16);
+		lld1.addLast(17);
+		lld1.addLast(18);
+		lld1.addLast(19);
+		for (int i = 0; i <= 17; i ++) {
+			lld1.removeFirst();
+		}
+
+		System.out.println("Printing the size of items");
+		System.out.println(lld1.size());
+		System.out.println("Printing deque after reudcing queue size from 20 to 3");
+		lld1.printDeque();
+
+
+
+
 	}
 
 	public static void main(String[] args) {

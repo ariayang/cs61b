@@ -80,9 +80,10 @@ public class LinkedListDeque<T> {
     separated by a space. */
     public void printDeque() {
         LLNode cursor = sentinel.next;
-        if (isEmpty()) {System.out.println("Empty list.");
+        if (isEmpty()) {
+            System.out.println("Empty list.");
         } else {
-            for (int i = 0; i < size; i++) {
+            for(int i = 0; i < size; i++) {
                 System.out.print (cursor.item + " ");
                 cursor = cursor.next;
             }
@@ -91,7 +92,7 @@ public class LinkedListDeque<T> {
     }
 
 
-    /* Removes and returns the item at the front of the deque.
+    /* Removes and returns the item at the front.
     If no such item exists, returns null. */
     public T removeFirst() {
         LLNode cursor = new LLNode();
@@ -111,10 +112,10 @@ public class LinkedListDeque<T> {
 
     public T removeLast() {
         LLNode cursor = new LLNode();
-        cursor = sentinel.next;  //cursor points to the first node
+        cursor = sentinel.next;  //cursor points to the first
         if (isEmpty()) {
             return null;
-        } else if (sentinel.next == cursor.next) {  //Case of Only one node
+        } else if (sentinel.next == cursor.next) {  //Only one node
             sentinel.next = null;
         } else {
             cursor = cursor.prev;  //cursor points to the last node
@@ -137,25 +138,22 @@ public class LinkedListDeque<T> {
         LLNode cursor = sentinel.next;
         if (isEmpty()) {
             return null;
-        } else if (sentinel.next == cursor.next) {
-            if (index == 0) {
-                return (T) cursor.item;
+        } else if (index < 0 || index >= size) {
+                return null;
             } else {
-                return null; }
-        } else {
-            int i = 0;
-            while (sentinel.next != cursor.next)  {
+            for(int i = 0; i < size; i++) {
                 if (i == index) {
                     return (T) cursor.item;
-                } else { cursor = cursor.next; i++;}
+                } else {
+                    cursor = cursor.next;
+                }
             }
-            return null;
         }
+        return null;
     }
 
     /* Same as get, but uses recursion. */
-    public T getRecursive (int index) {
-
+    public T getRecursive(int index) {
         LLNode cursor = sentinel.next;  //first node
         if (isEmpty()) {
             return null;
@@ -164,17 +162,17 @@ public class LinkedListDeque<T> {
         if (foundNode == null) {
             return null;
         } else {
-            return (T) foundNode.item; }
+            return (T) foundNode.item;
+        }
     }
 
     private LLNode findNodeRecursive(int index, LLNode n) {
         if (index == 0) {
             return n;
-        } else if (index <0) {
+        } else if (index < 0) {
             return null;
         } else {
             return findNodeRecursive(index - 1, n.next);
         }
     }
 }
-

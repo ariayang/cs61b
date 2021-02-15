@@ -1,6 +1,6 @@
 public class ArrayDeque<T> {
     /* Deque (usually pronounced like “deck”) is an irregular acronym of
-    * double-ended queue. Double-ended queues are sequence containers with
+    * * double-ended queue. Double-ended queues are sequence containers with
     * dynamic sizes that can be expanded or contracted on both ends
     * (either its front or its back). */
     private int size;
@@ -35,11 +35,11 @@ public class ArrayDeque<T> {
 
     /** Add item (type T) to the last. */
     public void addLast(T item) {
-        if (isEmpty()) {  //Empty array
+        if (isEmpty()) {  //Empty
             items[0] = item;
             sentinel = 0;
         } else {
-            if (size == items.length ) {
+            if (size == items.length) {
                 resize(size * RFACTOR);
             }  //Resize if array is full
             items[loopindex(sentinel + size)] = item;
@@ -58,8 +58,8 @@ public class ArrayDeque<T> {
             if (size > 1) {
                 sentinel = loopindex(sentinel + 1);
             } else {  //Empty list after
-                sentinel = 0; }
-                size--;
+                sentinel = 0;}
+            size--;
             return poppedItem;
         }
     }
@@ -76,6 +76,9 @@ public class ArrayDeque<T> {
                 sentinel = 0;  //Empty list after
             }
             size--;
+            if (ifsizeDown()) {
+                sizeDown();
+            }
             return poppedItem;
         }
     }
@@ -94,7 +97,8 @@ public class ArrayDeque<T> {
 
 
     private T getLast() {
-        if (size == 0) { return null;
+        if (size == 0) {
+            return null;
         } else {
             return items[loopindex(sentinel + size - 1)];
         }
@@ -117,7 +121,7 @@ public class ArrayDeque<T> {
         } else {
             //int printSeq = sentinel;
             for (int i = sentinel; i < size + sentinel; i++) {
-                System.out.print (items[loopindex(i)] + " ");
+                System.out.print(items[loopindex(i)] + " ");
             }
         }
         System.out.print("\n");
@@ -126,8 +130,8 @@ public class ArrayDeque<T> {
     /** Resize the matrix , takes the new matrix size, return the new matrix */
     private void resize(int newSize)  {
         T[] a = (T []) new Object[newSize];
-        System.arraycopy(items, sentinel, a, 0, size-sentinel);  //when array is full
-        System.arraycopy(items, 0, a, size-sentinel, sentinel);
+        System.arraycopy(items, sentinel, a, 0, size - sentinel);  //when array is full
+        System.arraycopy(items, 0, a, size - sentinel, sentinel);
         items = a;
         sentinel = 0;
     }
@@ -151,5 +155,26 @@ public class ArrayDeque<T> {
     private boolean inrange(int number) {
         return (number >= 0 && number < items.length);
     }
-}
 
+    /** size down function to half
+     * change the array with size reduction */
+    private void sizeDown() {
+        int arrayL = items.length;
+        T[] a = (T []) new Object[arrayL/2];
+        if ((size + sentinel) < items.length) {
+            System.arraycopy(items, 0, a, arrayL - sentinel, size - arrayL + sentinel);
+        }
+        System.arraycopy(items, sentinel, a, 0, arrayL - sentinel);
+        items = a;
+        sentinel = 0;
+    }
+
+    /** Helper: decide if size down needed < 25% */
+    private boolean ifsizeDown() {
+        if ((size / items.length) < 0.25 && items.length > 16) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
