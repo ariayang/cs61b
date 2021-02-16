@@ -24,6 +24,10 @@ public class Palindrome {
         }
     }
 
+    private boolean isPalHelper(Deque myDeque) {
+        return true;
+    }
+
     /** return true if the word is palindrome. */
     public boolean isPalindrome(String word, CharacterComparator cc) {
         if (word.length() <= 1) {
