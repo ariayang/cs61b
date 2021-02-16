@@ -2,7 +2,7 @@ package synthesizer;
 import java.util.Iterator;
 
 
-public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> implements BoundedQueue<T> {
+public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
     /* Index for the next dequeue or peek. */
     private int first;
     /* Index for the next enqueue. */
@@ -107,19 +107,4 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> implements Bound
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if ((ArrayRingBuffer) o == o) {
-            Iterator thisArray = this.iterator();
-            Iterator oArray = ((ArrayRingBuffer) o).iterator();
-            while (thisArray.hasNext() && oArray.hasNext()) {
-                if (!thisArray.next().equals(oArray.next())) {
-                    return false;
-                }
-            }
-            return (!thisArray.hasNext() && !oArray.hasNext());
-        } else {
-            return false;
-        }
-    }
 }

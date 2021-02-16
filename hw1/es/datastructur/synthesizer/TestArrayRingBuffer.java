@@ -24,7 +24,7 @@ public class TestArrayRingBuffer {
             //assertArrayEquals([33.1, 44.8, 62.3, null], );
             arb.enqueue(-3.4);
             arb.enqueue(0.6);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.out.println(e);
         }
         /* assertArrayEquals([33.1, 44.8, 62.3, -3.4], arb.enqueue(-3.4);
@@ -41,13 +41,13 @@ public class TestArrayRingBuffer {
             arb.dequeue();
             arb.dequeue();
             arb.dequeue();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.out.println(e);
         }
 
         try {
             arb.peek();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             System.out.println(e);
         }
 
