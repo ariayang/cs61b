@@ -58,7 +58,8 @@ public class ArrayDeque<T> {
             if (size > 1) {
                 sentinel = loopindex(sentinel + 1);
             } else {  //Empty list after
-                sentinel = 0;}
+                sentinel = 0;
+            }
             size--;
             if (ifsizeDown()) {
                 sizeDown();
@@ -161,7 +162,7 @@ public class ArrayDeque<T> {
      * change the array with size reduction */
     private void sizeDown() {
         int arrayL = items.length;
-        T[] a = (T []) new Object[arrayL/2];
+        T[] a = (T []) new Object[arrayL / 2];
         if ((size + sentinel) >= arrayL) { //2 copies
             System.arraycopy(items, sentinel, a, 0, arrayL - sentinel);
             System.arraycopy(items, 0, a, arrayL - sentinel, size - arrayL + sentinel);
@@ -175,10 +176,6 @@ public class ArrayDeque<T> {
     /** Helper: decide if size down needed < 25% */
     private boolean ifsizeDown() {
         double ratio = (double) size / items.length;
-        if (ratio > 0.25 || items.length <= 16) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(ratio > 0.25 || items.length <= 16);
     }
 }
