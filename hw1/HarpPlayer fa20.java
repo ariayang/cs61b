@@ -1,5 +1,5 @@
 import edu.princeton.cs.algs4.StdAudio;
-import synthesizer.GuitarString;
+import es.datastructur.synthesizer.Harp;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaMessage;
@@ -17,12 +17,12 @@ import java.io.InputStream;
  *
  * @author Eli Lipsitz
  */
-public class GuitarPlayer {
+public class HarpPlayer {
     private Sequence sequence = null;
-    private GuitarString[] strings;
+    private Harp[] strings;
     private double[] vol;
 
-    public GuitarPlayer(InputStream source) {
+    public HarpPlayer(InputStream source) {
         try {
             sequence = MidiSystem.getSequence(source);
         } catch (IOException | InvalidMidiDataException e) {
@@ -30,7 +30,7 @@ public class GuitarPlayer {
         }
     }
 
-    public GuitarPlayer(File source) {
+    public HarpPlayer(File source) {
         try {
             sequence = MidiSystem.getSequence(source);
         } catch (IOException | InvalidMidiDataException e) {
@@ -39,10 +39,10 @@ public class GuitarPlayer {
     }
 
     private void initialize() {
-        strings = new GuitarString[128];
+        strings = new Harp[128];
         vol = new double[128];
         for (int i = 0; i < strings.length; i++) {
-            strings[i] = new GuitarString(440.0 * Math.pow(2.0, (i - 69.0) / 12.0));
+            strings[i] = new Harp(440.0 * Math.pow(2.0, (i - 69.0) / 12.0));
             vol[i] = 0.0;
         }
     }

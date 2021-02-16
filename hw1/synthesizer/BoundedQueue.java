@@ -1,4 +1,4 @@
-package es.datastructur.synthesizer;
+package synthesizer;
 
 /** Items can only enque at back
  * Deque from front (queue)
