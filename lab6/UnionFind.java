@@ -8,6 +8,8 @@ public class UnionFind {
     public UnionFind(int n) {
         parent = new int[n];
         // set all the parents to be -1 to symbolize that they are disjoint
+        // for every node (v1, array index), its value: its parent's index
+        // or - size if the root. -1 if an isolated set.
         for (int i = 0; i < n; i++) {
             parent[i] = -1;
         }
@@ -15,11 +17,15 @@ public class UnionFind {
 
     /* Throws an exception if v1 is not a valid vertex. */
     private void validate(int v1) {
-        // TODO
+        // Written
+        if (v1 >= parent.length) {
+            throw new IllegalArgumentException("invalid vertex");
+        }
     }
 
     /* Returns the size of the set v1 belongs to. */
     public int sizeOf(int v1) {
+        validate(v1);
         int root = find(v1);
         return -1 * parent[root];
     }
@@ -27,13 +33,16 @@ public class UnionFind {
     /* Returns the parent of v1. If v1 is the root of a tree, returns the
        negative size of the tree for which v1 is the root. */
     public int parent(int v1) {
+        validate(v1);
         return parent[v1];
     }
 
     /* Returns true if nodes v1 and v2 are connected. */
     public boolean isConnected(int v1, int v2) {
-        // TODO
-        return false;
+        // Written
+        validate(v1);
+        validate(v2);
+        return (find(v1) == find(v2));
     }
 
     /* Connects two elements v1 and v2 together. v1 and v2 can be any valid 
@@ -43,12 +52,16 @@ public class UnionFind {
        change the sets but may alter the internal structure of the data. */
     public void connect(int v1, int v2) {
         // TODO
+        validate(v1);
+        validate(v2);
+
     }
 
     /* Returns the root of the set v1 belongs to. Path-compression is employed
        allowing for fast search-time. */
     public int find(int v1) {
         // TODO
+        validate(v1);
         return -1;
     }
 
