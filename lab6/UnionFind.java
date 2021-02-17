@@ -18,7 +18,7 @@ public class UnionFind {
     /* Throws an exception if v1 is not a valid vertex. */
     private void validate(int v1) {
         // Written
-        if (v1 >= parent.length) {
+        if (v1 < 0 || v1 >= parent.length) {
             throw new IllegalArgumentException("invalid vertex");
         }
     }
@@ -54,15 +54,35 @@ public class UnionFind {
         // TODO
         validate(v1);
         validate(v2);
-
+        int v1Size = sizeOf(v1);   //size of the set v1 belons
+        int v1Root = find(v1);  //return the root index
+        int v2Root = find(v2);
+        int v2Size = sizeOf(v2);
+        int finalsize = v1Size + v2Size;
+        if (v1 == v2 || v1Root == v2Root) {
+        } else if (v1Size <= v2Size) {
+            parent[v1Root] = v2Root;
+            parent[v2Root] = finalsize * (-1);
+        } else {
+            parent[v2Root] = v1Root;
+            parent[v1Root] = finalsize * (-1);
+        }
     }
 
     /* Returns the root of the set v1 belongs to. Path-compression is employed
        allowing for fast search-time. */
+    // return itself if it's isolated
     public int find(int v1) {
-        // TODO
         validate(v1);
-        return -1;
+        if (parent[v1] == -1) {
+            return v1;
+        } else {
+            // TO OPTIMIZE
+            while (parent[v1] > 0) {
+                v1 = parent[v1];
+            }
+            return v1;
+        }
     }
 
 }
