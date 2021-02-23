@@ -1,14 +1,14 @@
 package hw2;
 
 import edu.princeton.cs.introcs.StdRandom;
-import edu.princeton.cs.introcs.StdStats;
+//import edu.princeton.cs.introcs.StdStats;
 
 public class PercolationStats {
 
-    Percolation mypf;
-    int gridN;
-    int testTimes;
-    double[] percOpenSites;
+    private Percolation mypf;
+    private int gridN;
+    private int testTimes;
+    private double[] percOpenSites;
 
     /** Perform T independent experiments on an N by N grid */
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -22,9 +22,9 @@ public class PercolationStats {
         // TO perform T times
         for (int i = 0; i < T; i++) {
             mypf = pf.make(N);
-            while(!mypf.percolates()) {
-                int row = StdRandom.uniform(N - 1);
-                int col = StdRandom.uniform(N - 1);
+            while (!mypf.percolates()) {
+                int row = StdRandom.uniform(N );
+                int col = StdRandom.uniform(N );
                 mypf.open(row, col);
             }
             percOpenSites[i] = (double) mypf.numberOfOpenSites() / (double) (N * N);
@@ -35,7 +35,7 @@ public class PercolationStats {
     public double mean() {
         double mysum = 0.0;
         for (int i = 0; i < testTimes; i++) {
-        mysum = percOpenSites[i] + mysum;
+            mysum = percOpenSites[i] + mysum;
         }
         return (double) mysum / testTimes;
     }

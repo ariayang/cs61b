@@ -7,19 +7,19 @@ import static org.junit.Assert.assertEquals;
 
 public class Percolation {
     /** create N-by-N grid, with all sites initially blocked */
-    int gridN;  // length or width of the grid
+    private int gridN;  // length or width of the grid
 
     /** Status of the sites: Open 1, blocked 0 */
-    int[] gridContents;
+    private int[] gridContents;
 
     /** Record number of open sites. */
-    int numOpenSites;
+    private int numOpenSites;
 
     /** Implementation using Weighted Quick Union. */
-    WeightedQuickUnionUF wquf;
+    private WeightedQuickUnionUF wquf;
 
     /** Status of the bottom row: Percolated 1, Not yet 0 */
-    //int[] bottomOpen;
+    //int perc;
 
     public Percolation(int N) {
         if (N <= 0) {
@@ -29,6 +29,7 @@ public class Percolation {
         wquf = new WeightedQuickUnionUF(N * N + 2);
         gridContents = new int[N * N];
         numOpenSites = 0;
+        //perc = 0;
         //wquf [N * N]: Top virtual site
         //wquf [N * N +1]: Bottom virtual site
         for (int i = 0; i < gridN; i++) {
@@ -40,10 +41,10 @@ public class Percolation {
     // open the site (row, col) if it is not open already
     public void open(int row, int col) {
         int index = gridConvert(row, col);
-        if (isOpen(row, col)) { return; //do nothing
+        if (isOpen(row, col)) { return;
         } else {
             gridContents[index] = 1;
-            numOpenSites ++;
+            numOpenSites++;
         }
 
         // Check if 4 neighboring sites can be connected if open
@@ -82,11 +83,10 @@ public class Percolation {
     public boolean isOpen(int row, int col) {
         int index = gridConvert(row, col);
         return (gridContents[index] != 0);
-        }
+    }
 
     // is the site (row, col) full?
     /** To check if it's connected to the top row */
-    /** TODO: How to prevent backwash? */
     public boolean isFull(int row, int col) {
         int index = gridConvert(row, col);
         return (wquf.connected(index, gridN * gridN) && isOpen(row, col));
@@ -123,10 +123,8 @@ public class Percolation {
             //check if it's side case
             if (index1 % gridN == 0 && index2 < index1) {
                 return false;
-            } else if (index2 % gridN == 0 && index1 < index2) {
-                return false;
             } else {
-                return true;
+                return !(index2 % gridN == 0 && index1 < index2);
             }
         } else {
             return false;
@@ -147,34 +145,8 @@ public class Percolation {
             }
         } else {
             throw new java.lang.IndexOutOfBoundsException();
-            }
+        }
         return false;
     }
-
-    /** Helper: return an iterable of neighbors */
-    private Integer[] neighbors(int row, int col) {
-        Integer[] neighbors = new Integer[4];
-        if (isValid(row - 1, col) & isNeighbor(row, col, row-1, col)) {
-            neighbors[0] = gridConvert(row - 1, col);
-        }
-        if (isValid(row, col - 1) & isNeighbor(row, col, row, col - 1)) {
-            neighbors[1] = gridConvert(row, col - 1);
-        }
-        if (isValid(row, col + 1) & isNeighbor(row, col, row, col + 1)) {
-            neighbors[2] = gridConvert(row, col + 1);
-        }
-        if (isValid(row + 1, col) & isNeighbor(row, col, row + 1, col)) {
-            neighbors[3] = gridConvert(row + 1, col);
-        }
-        return neighbors;
-    }
-
-    private int[] convertRowCol(int n) {
-        int pos[] = new int[2];
-        pos[0] = n / gridN; // row
-        pos[1] = n % gridN; // col
-        return pos;
-    }
-
 
 }

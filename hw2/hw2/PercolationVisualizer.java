@@ -82,6 +82,14 @@ public class PercolationVisualizer {
 
     public static void main(String[] args) {
         //String filename = args[0];
-        simulateFromFile("inputFiles/input20.txt");
+        //Testing done:
+        // simulateFromFile("inputFiles/input20.txt");
+        PercolationFactory pf = new PercolationFactory();
+        PercolationStats mystat = new PercolationStats(400, 1000, pf);
+        System.out.println("Testing Mean is: ");
+        System.out.println(mystat.mean());
+        System.out.println(mystat.stddev());
+        System.out.println(mystat.confidenceLow());
+        System.out.println(mystat.confidenceHigh());
     }
 }

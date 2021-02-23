@@ -1,7 +1,5 @@
 package hw2;
 
-import java.util.ArrayList;
-
 public class UnionFind {
     int[] parent;
 
@@ -61,7 +59,7 @@ public class UnionFind {
         int v2Root = find(v2);
         int v2Size = sizeOf(v2);
         int finalsize = v1Size + v2Size;
-        if (v1 == v2 || v1Root == v2Root) {
+        if (v1 == v2 || v1Root == v2Root) { return;
         } else if (v1Size <= v2Size) {
             parent[v1Root] = v2Root;
             parent[v2Root] = finalsize * (-1);
