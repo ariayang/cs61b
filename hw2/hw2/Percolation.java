@@ -41,7 +41,8 @@ public class Percolation {
     // open the site (row, col) if it is not open already
     public void open(int row, int col) {
         int index = gridConvert(row, col);
-        if (isOpen(row, col)) { return;
+        if (isOpen(row, col)) {
+            return;
         } else {
             gridContents[index] = 1;
             numOpenSites++;

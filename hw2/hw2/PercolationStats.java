@@ -23,8 +23,8 @@ public class PercolationStats {
         for (int i = 0; i < T; i++) {
             mypf = pf.make(N);
             while (!mypf.percolates()) {
-                int row = StdRandom.uniform(N );
-                int col = StdRandom.uniform(N );
+                int row = StdRandom.uniform(N);
+                int col = StdRandom.uniform(N);
                 mypf.open(row, col);
             }
             percOpenSites[i] = (double) mypf.numberOfOpenSites() / (double) (N * N);
