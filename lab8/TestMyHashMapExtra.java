@@ -6,7 +6,7 @@ public class TestMyHashMapExtra {
 
     /* Remove Test
      */
-    @Test
+     @Test
     public void testRemove() {
         MyHashMap<String, String> q = new MyHashMap<String, String>();
         q.put("c", "a");
