@@ -65,8 +65,42 @@ public class KDTree {
         if (Point.distance(n.value, goal) < Point.distance(best.value, goal)) {
             best = n;
         }
-        best = nearest(n.left, goal, best);
-        best = nearest(n.right, goal, best);
+        //Now traversing good side first, then bad side
+
+        KdNode goodSide;
+        KdNode badSide;
+        double badSideDelta;
+
+        //compare x
+        if (n.depth % 2 == 0) {
+            if (goal.getX() < n.value.getX()) {
+                goodSide = n.left;
+                badSide = n.right;
+            } else {
+                goodSide = n.right;
+                badSide = n.left;
+            }
+            badSideDelta = (n.value.getX() - goal.getX()) * (n.value.getX() - goal.getX());
+            } else {  //Compare y
+            if (goal.getY() < n.value.getY()) {
+                goodSide = n.left;
+                badSide = n.right;
+            } else {
+                goodSide = n.right;
+                badSide = n.left;
+            }
+            badSideDelta = (n.value.getY() - goal.getY()) * (n.value.getY() - goal.getY());
+        }
+
+        best = nearest(goodSide, goal, best);
+
+        //if badSide still useful
+        //Only explore badSide if Distance(best, goal) > abs(n.y - goal.y)*(n.y - goal.y)
+        //KdNode bestBadSidePoint = badSide;
+            if (Point.distance(best.value, goal) > badSideDelta) {
+                best = nearest(badSide, goal, best);
+            }
+        //}
         return best;
     }
 
