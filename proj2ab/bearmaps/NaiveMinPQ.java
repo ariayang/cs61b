@@ -63,6 +63,7 @@ public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
         return items.size();
     }
 
+    //Why indexOf element is to return index of a new Node with priority 0?
     private int indOf(T elem) {
         return items.indexOf(new PriorityNode(elem, 0));
     }

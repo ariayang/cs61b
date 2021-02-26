@@ -40,6 +40,7 @@ public class PrintHeapDemo {
         System.out.println(drawing);
     }
 
+
     /* Recursive helper method for toString. */
     private static String fancyHeapDrawingHelper(Object[] items, int index, String soFar) {
         if (index >= items.length || items[index] == null) {
@@ -66,5 +67,7 @@ public class PrintHeapDemo {
         Integer[] example = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         printSimpleHeapDrawing(example);
         printFancyHeapDrawing(example);
+
+
     }
 }
