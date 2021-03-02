@@ -1,4 +1,4 @@
-package bearmaps;
+package bearmaps.proj2ab;
 
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -93,15 +93,15 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (size() == 0) {
             throw new NoSuchElementException("PQ is empty");
         }
-        
-        itemNode lastNode = items.get(size() - 1);
+
+        itemNode lastNode = items.get(size() -1); //items arraylist real size is size() + 1
         T smallItem = getSmallest();  // Top item to pop
         items.set(1, lastNode);    //Move last node to item 1
         index.put(lastNode.getItem(), 1);  //change index map for last item
-        
+
         size--;
         index.remove(smallItem);  //remove smallest item key from index map
-        items.remove(size());    // shorten the heap arrayList
+        items.remove(size() );    // shorten the heap arrayList
         swimdown(1);  // swim down from the top
 
         return smallItem;
