@@ -17,8 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bearmaps.proj2d.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2d.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2d.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
@@ -87,9 +86,117 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
         //System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+        //System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
+         //       + "your browser.");
+
+        /** Calculate Longitudinal distance per pixel, LonDPP */
+        /** Suppose params = {ullon=-122.241632, lrlon=-122.24053, w=892.0, h=875.0, ullat=37.87655, lrlat=37.87548} */
+        /** depth 1 file, d1, resolution 49feet/pixel, d2 25feet/pixel, d8 0.38, d9 0.19 */
+        /** Returned value might be: {raster_ul_lon=-122.24212646484375, depth=7,
+         * raster_lr_lon=-122.24006652832031, raster_lr_lat=37.87538940251607,
+         * raster_ul_lat=37.87701580361881, query_success=true,
+         * render_grid=[[d7_x84_y28.png, d7_x85_y28.png, d7_x86_y28.png], [d7_x84_y29.png...]}
+         */
+
+        //Retrieving the request Parameters
+        double lrlon = requestParams.get("lrlon");
+        double ullon = requestParams.get("ullon");
+        double lrlat = requestParams.get("lrlat");
+        double ullat = requestParams.get("ullat");
+        double w = requestParams.get("w");
+        double h = requestParams.get("h");
+
+        //Calculate required resolution
+        if (ullon < ROOT_ULLON) { ullon = ROOT_ULLON; }
+        if (lrlon > ROOT_LRLON) { lrlon = ROOT_LRLON; }
+        if (ullat > ROOT_ULLAT) { ullat = ROOT_ULLAT; }
+        if (lrlat < ROOT_LRLAT) { lrlat = ROOT_LRLAT; }
+
+
+        int SL = 288200;
+        double LonDPP = (lrlon - ullon) * SL / w; //feet per pixel
+        //double LatDPP = (lrlat - ullat) * SL / h; //feet per pixel
+        System.out.println("Lon resolution: " + LonDPP);
+
+        /** Calculate correct depth */
+        int depth = calDep(LonDPP);
+        //double targetRes =  (ROOT_LRLON - ROOT_ULLON) / TILE_SIZE/ Math.pow(2, depth - 1);
+        //double targetResY = (ROOT_LRLAT - ROOT_ULLAT) / TILE_SIZE/ Math.pow(2, depth - 1);
+        //System.out.println("Map depth is " + depth);
+
+
+        /** 2. Bounding box for a given filename 3. how many tiles */
+        // Use tree to find the closest bound LAT and LOG?
+        // different depth has different tree, or calculate in-situ?
+
+        // size of image for depth = 0
+        double deltaX = ROOT_LRLON - ROOT_ULLON;
+        double sectionX = deltaX / (depth + 1);
+        double deltaY = - ROOT_LRLAT + ROOT_ULLAT;
+        double sectionY = deltaY / (depth + 1);
+
+        System.out.println("depth = " + depth); //Debug print
+
+        int startX = (int)((ullon - ROOT_ULLON) / sectionX); //0
+        double raster_ul_lon = startX * sectionX + ROOT_ULLON;
+
+        int endX = (int)((lrlon - ROOT_ULLON - sectionX) / sectionX ); //3
+        double raster_lr_lon = endX * sectionX + ROOT_ULLON;
+
+        int startY = (int)((- ullat + ROOT_ULLAT) / sectionY); //1
+        double raster_ul_lat = - startY * sectionY + ROOT_ULLAT;
+
+        int endY = (int)((- lrlat + ROOT_ULLAT + sectionY ) / sectionY); //4
+        double raster_lr_lat = - endY * sectionY + ROOT_ULLAT;
+
+        int numTiles = (endX - startX + 1) * (endY - startY + 1);
+        System.out.println("endX, startX: " + endX + " " + startX);
+        System.out.println("endY, startY: " + endY + " " + startY);
+        String[][] render_grid = new String[endY - startY + 1][endX - startX + 1];
+        for (int y = startY; y <= endY; y++) {
+            for (int x = startX; x <= endX; x++) {
+                String dep = 'd' + Integer.toString(depth);
+                String xp = "_x" + Integer.toString(x);
+                String yp = "_y" + Integer.toString(y);
+                render_grid[y - startY][x - startX] = dep + xp + yp + ".png";
+            }
+        }
+        System.out.println(render_grid[0]);
+
+
+        results.put("raster_ul_lon", raster_ul_lon);
+        results.put("depth", depth);
+        results.put("raster_lr_lon", raster_lr_lon);
+        results.put("raster_lr_lat", raster_lr_lat);
+        results.put("raster_ul_lat", raster_ul_lat);
+        results.put("render_grid", render_grid);
+        results.put("query_success", true); //TODO
+
         return results;
+    }
+
+    /** Helper function to calculate depth needed */
+    private int calDep(double LonDPP) {
+        int SL = 288200;
+        double res0 = SL * (ROOT_LRLON - ROOT_ULLON) / TILE_SIZE; //feet/pixel
+        //double res1 =  SL * (122.2558 - 122.21191) / 256;
+        double res1 = res0 / Math.pow(2, 1);
+        //double res2 = SL * (122.256 -122.2339) / 256;
+        double res2 = res0 / Math.pow(2, 2);
+        double res3 = res0 / Math.pow(2, 3);
+        double res4 = res0 / Math.pow(2, 4);
+        double res5 = res0 / Math.pow(2, 5);
+        double res6 = res0 / Math.pow(2, 6);
+
+        if (LonDPP > (res0)) { return 0;
+        } else if (LonDPP >= res1) { return 1;
+        } else if (LonDPP >= res2) { return 2;
+        } else if (LonDPP >= res3) { return 3;
+        } else if (LonDPP >= res4) { return 4;
+        } else if (LonDPP >= res5) { return 5;
+        } else if (LonDPP >= res6) { return 6;
+        } else  { return 7;
+        }
     }
 
     @Override
