@@ -1,0 +1,16 @@
+Took an extremely Long time figuring out the lower end Y (the smaller the lower) bound.
+Messy code and notes. Section Width, root start, root endY, etc.
+Are not clear enough.
+
+
+Also, the number of times got wrong. Should be power of 2, instead of 2+1. 
+
+
+Then, the boundary case. Use Math.min, Math.max, Math.cil, Math.floor accordingly.
+
+
+
+--
+
+For routing, took a while to figure out how to get the vertices. 
+对class, function还是似是而非的用法。

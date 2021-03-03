@@ -100,6 +100,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
         results.put("query_success", true);
 
         // Check user boundary
+        /** no need at this point
         if (ullon < ROOT_ULLON) {
             if (lrlon < ROOT_ULLON) {
                 results.put("query_success", false);
@@ -124,7 +125,7 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
             } else {
                 lrlat = ROOT_LRLAT;
             }
-        }
+        } */
 
 
 
@@ -134,41 +135,53 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
 
         /** Calculate depth */
         int depth = calDep(LonDPP);
-        System.out.println("Lon depth is " + depth); //Debug print
+        //System.out.println("Lon depth is " + depth); //Debug print
+
+        /** Calculate number of tiles per axis */
+        int numTiles = (int) Math.pow(2, depth);
 
         /** Get Bounding box */
 
         /** Calculate depth 0 image size */
         double deltaX = ROOT_LRLON - ROOT_ULLON;
-        double sectionX = deltaX / (depth + 1);  //widthX of each rastering image
+        double sectionX = deltaX / Math.pow(2, depth);  //widthX of each rastering image
         double deltaY = - ROOT_LRLAT + ROOT_ULLAT;
-        double sectionY = deltaY / (depth + 1); //widthY of each rastering image
+        double sectionY = deltaY / Math.pow(2, depth); //widthY of each rastering image
 
-        int startX = (int)((ullon - ROOT_ULLON) / sectionX); //0
+        /** Upper Left corner */
+        int startX = (int)((ullon - ROOT_ULLON) / sectionX);
+        startX = Math.max(startX, 0);
         double raster_ul_lon = startX * sectionX + ROOT_ULLON; //abs X start location
 
-        int endX = (int)((lrlon - ROOT_ULLON - sectionX) / sectionX ); //3
-        double raster_lr_lon = endX * sectionX + ROOT_ULLON + sectionX;
-        System.out.println("raster lr lon is: " + raster_lr_lon);
-
-        int startY = (int)((- ullat + ROOT_ULLAT) / sectionY); //1, abs Y start file location
+        int startY = (int)((- ullat + ROOT_ULLAT) / sectionY); //abs Y start file location
+        startY = Math.max(startY, 0);
         double raster_ul_lat = - startY * sectionY + ROOT_ULLAT; //abs Y start location
 
-        int endY = (int)((- lrlat + ROOT_ULLAT - sectionY) / sectionY) + 1; //Why+1 worked? 
-        double raster_lr_lat = - (endY - startY) * sectionY + raster_ul_lat;
-        System.out.println("raster lr lat is: " + raster_lr_lat);
+        /** Lower Right Corner */
+        int endX = (int)Math.ceil((lrlon - ROOT_ULLON - sectionX) / sectionX );
+        endX = Math.min(endX, numTiles - 1);
+        double raster_lr_lon = endX * sectionX + ROOT_ULLON + sectionX;
+        //System.out.println("raster lr lon is: " + raster_lr_lon);
 
-        /** Calculate Number of Tiles, Generate File names */
-        int numTiles = (endX - startX + 1) * (endY - startY + 1);
-        //int numTiles = (depth + 1) * (endY - startY + 1);
-        System.out.println("endX, startX: " + endX + " " + startX);
-        System.out.println("endY, startY: " + endY + " " + startY);
+        int endY = (int)Math.ceil((- lrlat + ROOT_ULLAT - sectionY) / sectionY); //Why+1 worked?
+        endY = Math.min(endY, numTiles - 1);
+        double raster_lr_lat = - endY * sectionY + ROOT_ULLAT - sectionY;
+        //System.out.println("raster lr lat is: " + raster_lr_lat);
+
+        // Deal with 1-D query: when query box degrades to a line or even a single point,
+        // we may get startX > xLast, startX == numOfTiles, etc. above)
+        startX = Math.min(startX, numTiles - 1);
+        endX = Math.max(endX, startX);
+        startY = Math.min(startY, numTiles - 1);
+        endY = Math.max(endY, startY);
+
+        /** Generate File names */
         String[][] render_grid = new String[endY - startY + 1][endX - startX + 1];
         for (int y = startY; y <= endY; y++) {
             for (int x = startX; x <= endX; x++) {
                 String dep = 'd' + Integer.toString(depth);
-                String xp = "_x" + Integer.toString(x);
-                String yp = "_y" + Integer.toString(y);
+                String xp = "_x" + x;
+                String yp = "_y" + y;
                 render_grid[y - startY][x - startX] = dep + xp + yp + ".png";
             }
         }

@@ -15,7 +15,7 @@ public class KDTree {
         }
     }
 
-    private void insert(Point p) {
+    public void insert(Point p) {
         root = insertHelper(p, root, root.depth);
     }
 

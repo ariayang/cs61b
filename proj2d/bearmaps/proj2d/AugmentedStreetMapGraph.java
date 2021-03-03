@@ -2,10 +2,16 @@ package bearmaps.proj2d;
 
 import bearmaps.proj2c.streetmap.StreetMapGraph;
 import bearmaps.proj2c.streetmap.Node;
+import bearmaps.proj2ab.Point;
+import bearmaps.proj2ab.KDTree;
+import bearmaps.proj2ab.WeirdPointSet;
+
 
 import java.util.List;
 import java.util.Map;
 import java.util.LinkedList;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * An augmented graph that is more powerful that a standard StreetMapGraph.
@@ -19,7 +25,7 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
     public AugmentedStreetMapGraph(String dbPath) {
         super(dbPath);
         // You might find it helpful to uncomment the line below:
-        // List<Node> nodes = this.getNodes();
+        List<Node> nodes = this.getNodes();
     }
 
 
@@ -31,7 +37,27 @@ public class AugmentedStreetMapGraph extends StreetMapGraph {
      * @return The id of the node in the graph closest to the target.
      */
     public long closest(double lon, double lat) {
-        return 0;
+        Node closest;
+        //closest need to have a neighbor, use a KD Tree, map between nodes and Point obj in KDTree
+        //Find corresponding Node, (map into Point) Get its neighbors,neighbors(Long v)
+        // Build KD tree, return closest
+        HashMap<Point, Node> nodePt = new HashMap(); //Point is Key, node is value
+
+        ArrayList<Point> ptList = new ArrayList<>();
+
+        for(Node n: this.getNodes()) {
+             if (this.neighbors(n.id()).size() > 0 ) {
+                 Point pt = new Point (n.lon(), n.lat());
+                 nodePt.put(pt, n);
+                 ptList.add(pt);
+             }
+        }
+        KDTree kdT = new KDTree(ptList);
+        //WeirdPointSet kdT = new WeirdPointSet((ptList));
+        Point closePT = kdT.nearest(lon, lat);
+        closest = nodePt.get(closePT);
+
+        return closest.id();
     }
 
 
