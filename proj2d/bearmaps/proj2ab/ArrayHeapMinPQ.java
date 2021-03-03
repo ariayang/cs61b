@@ -18,7 +18,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
         if (items == null) { //new Array
             items = new ArrayList<>();
-            items.add(new itemNode(null, 0));
+            items.add(new itemNode(item, (Double)priority));
             items.add(1, new itemNode(item, priority));
             index = new HashMap<>();
             size = 1;

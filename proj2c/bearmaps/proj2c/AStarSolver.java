@@ -5,18 +5,21 @@ import bearmaps.proj2ab.DoubleMapPQ;
 import edu.princeton.cs.algs4.Stopwatch;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.LinkedList;
 
 public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
     private SolverOutcome outcome;
     private double solutionWeight;
-    private List<Vertex> solution;
+    private LinkedList<Vertex> solution;
     private double timeSpent;
-     private ArrayHeapMinPQ pq;
+    private ArrayHeapMinPQ pq;
     //private DoubleMapPQ pq;
     private HashMap<Vertex, Double> distTo;
+    private HashMap<Vertex, Vertex> edgeTo;
     int deq;
     double longest = Double.POSITIVE_INFINITY;
     //double shortDist;
@@ -30,7 +33,8 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         //pq = new DoubleMapPQ();
         double p;  // priority of vertex v, sum of v's distance from the start + estimate v to goal
         distTo = new HashMap<>();
-        solution = new ArrayList<>();
+        edgeTo = new HashMap<>();
+        solution = new LinkedList<>();
         solutionWeight = 0;
 
         //PQ for all start's neighbor, from start, depth = 1
@@ -48,20 +52,20 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         //Insert source vertex
         pq.add(start, longest);
         distTo.put(start, longest);
-        solution.add(start);
+        //solution.add(start);
+        edgeTo.put(start, start);
 
         // Repeat until PQ is empty
         //Remove best vertex v from PQ, relax all edges pointing from v
         while(pq.size() != 0) {
             Vertex closest = (Vertex) pq.removeSmallest();
-            if(!solution.contains(closest)) {solution.add(closest); } //how to remove cycled route?
+            //if(!solution.contains(closest)) {solution.add(closest); } //how to remove cycled route?
             deq++;
             if (closest.equals(end)) {
                 outcome = SolverOutcome.SOLVED;
                 solutionWeight = distTo.get(end);
                 break;
             }
-
 
             List<WeightedEdge<Vertex>> sNeighbors = input.neighbors(closest);
             for(WeightedEdge e: sNeighbors) {
@@ -70,7 +74,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                 timeSpent = sw.elapsedTime();
                 if (timeSpent > timeout) {
                     outcome = SolverOutcome.TIMEOUT;
-                    solution = new ArrayList<>();
+                    solution = new LinkedList<>();
                     break;
                 }
             }
@@ -79,8 +83,16 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         if (pq.size() == 0) {
             outcome = SolverOutcome.UNSOLVABLE;
-            solution = new ArrayList<>();
+            solution = new LinkedList<>();
         }
+
+        /** Build solution */
+        Vertex pointer = end;
+        while((pointer!=null) && !pointer.equals(start)) {
+            solution.addFirst(pointer);
+            pointer = edgeTo.get(pointer);
+        }
+        solution.addFirst(start);
 
         return;
     }
@@ -94,6 +106,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         if ((distTo.get(p) + w) < distTo.get(q)) {
             distTo.put(q, distTo.get(p) + w);
+            edgeTo.put(q, p);
             if (pq.contains(q)) {
                 pq.changePriority(q, distTo.get(q) + input.estimatedDistanceToGoal(q, end));
             } else {

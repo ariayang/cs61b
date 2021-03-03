@@ -92,7 +92,7 @@ public class ArrayHeapMinPQTest {
         ArrayHeapMinPQ mPQ = new ArrayHeapMinPQ();
         NaiveMinPQ nPQ = new NaiveMinPQ();
 
-        /*
+
         for (int i = 0; i < listItems; i++) {
 
             double double_randomItem = StdRandom.uniform(-numberRange, numberRange);
@@ -103,16 +103,17 @@ public class ArrayHeapMinPQTest {
                 assertEquals(mPQ.getSmallest(), nPQ.getSmallest());  //Add is always working
             }
         }
-        */
+
 
         //assertEquals(mPQ.size(), nPQ.size()); //is right
 
         //Removal n Times, testing
-        //for (int i = 0; i < mPQ.size(); i++) {
-        //   assertEquals(mPQ.removeSmallest(), nPQ.removeSmallest());
-        //}
+        for (int i = 0; i < mPQ.size(); i++) {
+           assertEquals(mPQ.removeSmallest(), nPQ.removeSmallest());
+        }
 
         //Timing test
+        /*
         listItems = 100000;
         Stopwatch sw = new Stopwatch();
         for (int i = 0; i < listItems; i++) {
@@ -150,6 +151,8 @@ public class ArrayHeapMinPQTest {
         }
         System.out.println("NaivePQ's removal time is " + sw4.elapsedTime());
         System.out.println("NaivePQ's size is " + nPQ.size());
+        */
+
 
     }
 

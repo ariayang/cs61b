@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.LinkedList;
 
 public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
     private SolverOutcome outcome;
     private double solutionWeight;
-    private List<Vertex> solution;
+    private LinkedList<Vertex> solution;
     private double timeSpent;
     //private ArrayHeapMinPQ pq;
     private DoubleMapPQ pq;
@@ -33,7 +34,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         double p;  // priority of vertex v, sum of v's distance from the start + estimate v to goal
         distTo = new HashMap<>();
         edgeTo = new HashMap<>();
-        solution = new ArrayList<>();
+        solution = new LinkedList<>();
         solutionWeight = 0;
 
         //PQ for all start's neighbor, from start, depth = 1
@@ -52,7 +53,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         pq.add(start, longest);
         distTo.put(start, longest);
         //solution.add(start);
-        edgeTo.put(start, null);
+        edgeTo.put(start, start);
 
         // Repeat until PQ is empty
         //Remove best vertex v from PQ, relax all edges pointing from v
@@ -73,7 +74,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                 timeSpent = sw.elapsedTime();
                 if (timeSpent > timeout) {
                     outcome = SolverOutcome.TIMEOUT;
-                    solution = new ArrayList<>();
+                    solution = new LinkedList<>();
                     break;
                 }
             }
@@ -82,17 +83,16 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
 
         if (pq.size() == 0) {
             outcome = SolverOutcome.UNSOLVABLE;
-            solution = new ArrayList<>();
+            solution = new LinkedList<>();
         }
 
         /** Build solution */
         Vertex pointer = end;
-        while(!pointer.equals(start)) {
-            solution.add(pointer);
+        while((pointer!=null) && !pointer.equals(start)) {
+            solution.addFirst(pointer);
             pointer = edgeTo.get(pointer);
         }
-        solution.add(pointer);
-        Collections.reverse(solution);
+        solution.addFirst(start);
 
         return;
     }

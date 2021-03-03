@@ -18,7 +18,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
         if (items == null) { //new Array
             items = new ArrayList<>();
-            items.add(new itemNode(null, 0));
+            items.add(new itemNode(item, (Double)priority));
             items.add(1, new itemNode(item, priority));
             index = new HashMap<>();
             size = 1;
@@ -93,15 +93,15 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (size() == 0) {
             throw new NoSuchElementException("PQ is empty");
         }
-
-        itemNode lastNode = items.get(size() -1); //items arraylist real size is size() + 1
+        
+        itemNode lastNode = items.get(size() - 1);
         T smallItem = getSmallest();  // Top item to pop
         items.set(1, lastNode);    //Move last node to item 1
         index.put(lastNode.getItem(), 1);  //change index map for last item
-
+        
         size--;
         index.remove(smallItem);  //remove smallest item key from index map
-        items.remove(size() );    // shorten the heap arrayList
+        items.remove(size());    // shorten the heap arrayList
         swimdown(1);  // swim down from the top
 
         return smallItem;
