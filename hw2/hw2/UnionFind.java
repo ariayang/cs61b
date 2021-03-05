@@ -80,6 +80,7 @@ public class UnionFind {
         } else {
             // TO OPTIMIZE
             while (parent[v1] > 0) {
+                parent[v1] = parent[parent[v1]]; //compression
                 v1 = parent[v1];
             }
             return v1;
