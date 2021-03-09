@@ -5,8 +5,8 @@ import edu.princeton.cs.algs4.MinPQ;
 import java.util.*;
 
 public class Solver {
-    int moves;
-    SearchNode goal;
+    private int moves;
+    private SearchNode goal;
 
     /** Constructor which solves the puzzle, computing
      everything necessary for moves() and solution() to
