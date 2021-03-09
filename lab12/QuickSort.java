@@ -1,4 +1,6 @@
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.Stack;
+import org.junit.Test;
 
 public class QuickSort {
     /**
@@ -48,12 +50,60 @@ public class QuickSort {
             Queue<Item> unsorted, Item pivot,
             Queue<Item> less, Queue<Item> equal, Queue<Item> greater) {
         // Your code here!
+        while(!unsorted.isEmpty()) {
+            Item i1 = unsorted.dequeue();
+            if (i1.compareTo(pivot) < 0) {
+                less.enqueue(i1);
+            } else if (i1.compareTo(pivot) > 0) {
+                greater.enqueue(i1);
+            } else { equal.enqueue(i1); }
+        }
     }
 
     /** Returns a Queue that contains the given items sorted from least to greatest. */
     public static <Item extends Comparable> Queue<Item> quickSort(
             Queue<Item> items) {
         // Your code here!
-        return items;
+        //take items, choose pivot, partition()
+        if (items == null) { throw new NullPointerException(); }
+        if(items.size() <= 1) { return items; }
+
+
+        Item pivot = getRandomItem(items);
+        Queue<Item> less = new Queue<Item>();
+        Queue<Item> equal = new Queue<Item>();
+        Queue<Item> greater = new Queue<Item>();
+
+        partition(items, pivot, less, equal, greater);
+
+        less = quickSort(less);
+        greater = quickSort(greater);
+
+        return catenate(catenate(less, equal), greater);
+    }
+
+    @Test
+    public void test() {
+
+        //Testing partition
+        Queue<String> students = new Queue<String>();
+        students.enqueue("Alice");
+        students.enqueue("Vanessa");
+        students.enqueue("Ethan");
+        students.enqueue("Clif");
+        students.enqueue("Demi");
+        System.out.println("Before partition: " + students);
+        /*
+        String randItem = getRandomItem(students);
+        Queue<String> less = new Queue<String>();
+        Queue<String> equal = new Queue<String>();
+        Queue<String> greater = new Queue<String>();
+        partition(students, randItem, less, equal, greater);
+        System.out.println("After partition, less is : " + less);
+        System.out.println("After partition, pivot is : " + randItem);
+        System.out.println("After partition, greater is : " + greater);
+        */ //Above partition test is working
+        students = quickSort(students);
+        System.out.println("After partition: " + students);
     }
 }
