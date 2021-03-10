@@ -87,6 +87,7 @@ public class Board implements WorldState {
         int sizeN = size();
         for(int i = 0; i < sizeN; i++) {
             for (int j = 0; j < sizeN; j++) {
+                if (tileAt(i, j) == BLANK) { continue; }
                 if (tileAt(i, j) != (i * sizeN + j + 1)) {
                     wrong++;
                 }
@@ -104,6 +105,7 @@ public class Board implements WorldState {
         // i * sizeN + j + 1: should be the right number.
         for(int i = 0; i < sizeN; i++) {
             for (int j = 0; j < sizeN; j++) {
+                if (tileAt(i, j) == BLANK) { continue; }
                 if (tileAt(i, j) != (i * sizeN + j + 1)) {
                     int correctJ = tileAt(i, j) % sizeN;
                     int correctI = (tileAt(i, j) - correctJ) / sizeN;
@@ -118,15 +120,31 @@ public class Board implements WorldState {
         return manhattan();
     }
 
-   /** @Override
+   @Override
     public int hashCode() {
         return Arrays.hashCode(tiles);
-    }*/
+    }
 
    /** Returns true if this board's tile values are the same position as y's */
     public boolean equals(Object y) {
-        Board yb = new Board((int[][])y);
-        return (this.manhattan() == yb.manhattan());
+        if (y instanceof Board) {
+            Board otherBoard = (Board) y;
+
+            if (otherBoard.size() != this.size()) {
+                return false;
+            }
+
+            int sizeN = otherBoard.size();
+            for (int i = 0; i < sizeN; i++) {
+                for (int j = 0; j < sizeN; j++) {
+                    if (otherBoard.tileAt(i, j) != this.tileAt(i, j)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /** Provided by the Skeleton */
