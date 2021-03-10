@@ -107,8 +107,8 @@ public class Board implements WorldState {
             for (int j = 0; j < sizeN; j++) {
                 if (tileAt(i, j) == BLANK) { continue; }
                 if (tileAt(i, j) != (i * sizeN + j + 1)) {
-                    int correctJ = tileAt(i, j) % sizeN;
-                    int correctI = (tileAt(i, j) - correctJ) / sizeN;
+                    int correctJ = (tileAt(i, j) - 1) % sizeN;
+                    int correctI = (tileAt(i, j) - correctJ - 1) / sizeN;
                     wrong = wrong + Math.abs(i - correctI) + Math.abs(j - correctJ);
                 }
             }
