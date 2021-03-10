@@ -37,7 +37,7 @@ public class CountingSort {
         }
 
         // however, below is a more proper, generalized implementation of
-        // counting sort that uses start position calculation
+        // counting sort that uses start position calculation， Good for arrays
         int[] starts = new int[max + 1];
         int pos = 0;
         for (int i = 0; i < starts.length; i += 1) {
@@ -67,6 +67,41 @@ public class CountingSort {
      */
     public static int[] betterCountingSort(int[] arr) {
         // TODO make counting sort work with arrays containing negative numbers.
-        return null;
+        // find max
+        int max = Integer.MIN_VALUE;
+        for (int i : arr) {
+            max = max > i ? max : i;
+        }
+
+        // find min (esp for the negatives)
+        int min = Integer.MAX_VALUE;
+        for (int i : arr) {
+            min = min < i ? min : i; // if min < i, min = max, else, min = i
+        }
+
+        // number of buckets should be min + max (index max + 1 for max)
+        // offset index by min
+        int[] counts = new int[max - min + 1];
+        for (int i : arr) {
+            counts[i - min]++;
+        }
+
+        // counting sort that uses start position calculation， Good for arrays
+        int[] starts = new int[max - min + 1];
+        int pos = 0;
+        for (int i = 0; i < starts.length; i += 1) {
+            starts[i] = pos;
+            pos += counts[i];
+        }
+
+        int[] sorted2 = new int[arr.length];
+        for (int i = 0; i < arr.length; i += 1) {
+            int item = arr[i];
+            int place = starts[item - min];
+            sorted2[place] = item;
+            starts[item - min] += 1;
+        }
+
+        return sorted2;
     }
 }

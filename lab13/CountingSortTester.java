@@ -1,6 +1,8 @@
 import static org.junit.Assert.*;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 public class CountingSortTester {
 
     /**
@@ -14,6 +16,10 @@ public class CountingSortTester {
      **/
     private static int[] nonNegative = {9, 5, 2, 1, 5, 3, 0, 3, 1, 1};
 
+    /** Init String array */
+    private static String[] strArr = {"abc", "ade", "2def", "ab", "zbc", "fghijk", "st", "3z", "!", "poijk"};
+    private static String[] str2 = {"abc", "ade", "ab"};
+
     public static void assertIsSorted(int[] a) {
         int previous = Integer.MIN_VALUE;
         for (int x : a) {
@@ -22,6 +28,15 @@ public class CountingSortTester {
         }
     }
 
+    public static void assertIsSortedStr(String[] a) {
+        Character previous = (char) 0;
+        String str = previous.toString();
+        for (String x: a) {
+            assertTrue(x.compareTo(str) >= 0);
+            str = x;
+        }
+    }
+/**
     @Test
     public void testNaiveWithNonNegative() {
         int[] sortedNonNegative = CountingSort.naiveCountingSort(nonNegative);
@@ -51,6 +66,15 @@ public class CountingSortTester {
     public void testBetterWithSomeNegative() {
         int[] sortedSomeNegative = CountingSort.betterCountingSort(someNegative);
         assertIsSorted(sortedSomeNegative);
+    }*/
+
+    @Test
+    public void testRadixSortWithSomeNegative() {
+        String[] sortedSomeNegative = RadixSort.sort(strArr);
+        //assertIsSortedStr(sortedSomeNegative);
+        for (String x: sortedSomeNegative) {
+            System.out.println(x);
+        }
     }
 
 
